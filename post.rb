@@ -14,7 +14,7 @@ class Post
 
   def to_s
     puts "TITLE: #{title}".colorize(:blue) 
-    puts "URL: #{url}".red
+    puts "URL: #{url}".red.underline
     puts "This post got #{points} on Hacker News and has an item id of #{item_id}.".colorize(:magenta)
     puts " Would you like to see of list of comments? y/n ".green.blink
   end

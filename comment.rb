@@ -1,3 +1,5 @@
+require 'colorize'
+
 class Comment
 
   attr_reader :commenter_name, :commenter_text
@@ -8,7 +10,7 @@ class Comment
   end
 
   def to_s
-    "User #{commenter_name} says: \n \n #{commenter_text}\n\n"
+    "USER: #{commenter_name}\n COMMENT: #{commenter_text}\n \n".colorize(:blue) 
   end
 
 end

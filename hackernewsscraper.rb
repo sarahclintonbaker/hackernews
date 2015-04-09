@@ -1,17 +1,32 @@
-require 'nokogiri'
-require 'open-uri'
-require 'colorize'
-require_relative 'post'
-require_relative 'comment'
+class WebScraper  
+
+    def initialize(website)
+      @website = website
+      @@doc = Nokogiri::HTML(open(website))
+    end
+
+  def create_post
+    title = find_title
+    url = find_url
+    points = find_points
+    item_id = find_item_id
+    comments = create_comment
+    Post.new(title, url, points, item_id, comments)
+  end
 
 
-class WebScraper
-
-  class << self
-
-  @@article = 'https://news.ycombinator.com/item?id=9342369'
-
-  @@doc = Nokogiri::HTML(open(@@article))   
+  def create_comment
+    commenters = find_commenter_name
+      comments = find_commenter_text
+      comment_objects = []
+      i = 0
+      while i< commenters.size
+        temp_data = Comment.new(commenters[i], comments[i])
+        i += 1
+        comment_objects << temp_data
+    end
+    comment_objects
+  end
 
     def find_title
       @@doc.search('.title').text
@@ -43,30 +58,4 @@ class WebScraper
       @comments << comment
     end
 
-    def create_comment
-      commenters = self.find_commenter_name
-      comments = self.find_commenter_text
-      comment_objects = []
-      i = 0
-      while i< commenters.size
-        temp_data = Comment.new(commenters[i], comments[i])
-        i += 1
-        comment_objects << temp_data
-      end
-      comment_objects
-    end
-
-    def create_post
-      title = self.find_title
-      url = self.find_url
-      points = self.find_points
-      item_id = self.find_item_id
-      comments = self.create_comment
-      Post.new(title, url, points, item_id, comments)
-    end
-
-  end
-
 end
-
-puts WebScraper.create_post
